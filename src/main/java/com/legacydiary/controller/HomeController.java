@@ -37,7 +37,7 @@ public class HomeController {
 		String formattedDate = dateFormat.format(date);
 		
 		model.addAttribute("serverTime", formattedDate );
-		log.info("logging...........................................{}......{}", "abc", "def");
+		log.info("logging...........................................");
 		return "index";
 	}
 }

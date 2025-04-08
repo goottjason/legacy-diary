@@ -12,7 +12,7 @@
 <body>
 <nav class="navbar navbar-expand-sm bg-secondary navbar-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">MyDairy</a>
+    <a class="navbar-brand" href="/">MyDairy</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
