@@ -4,6 +4,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.legacydiary.domain.MemberDTO;
+
 // dao단임을 선언, root-context에서 스캔도 해야 함
 @Repository
 public class MemberDAOImpl implements MemberDAO {
@@ -18,7 +20,14 @@ public class MemberDAOImpl implements MemberDAO {
 	@Override
 	public int selectDuplicateId(String tmpMemberId) {
 		
+		// "selectMemberId" id값으로 호출, tmpMemberId 값을 넘겨줌
 		return ses.selectOne(ns + "selectMemberId",tmpMemberId);
+	}
+
+
+	@Override
+	public int insertMember(MemberDTO registerMember) {
+		return ses.insert(ns + "insertMember", registerMember);
 	}
 
 }
