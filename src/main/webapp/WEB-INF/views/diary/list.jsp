@@ -31,7 +31,7 @@ $(function() {
 				console.log(data); // 데이터가 넘어오면 콘솔에 확인
 				if (checked) {
 					console.log("체크되었으므로 가운데 줄 그을 클래스를 넣는다.", dno);
-					console.log($(this).find("label"));
+					console.log($(this).next());
 // 					$(this).next().next().addClass("checkon");
 				} else {
 					console.log("체크해제됐으므로 가운데 줄 그을 클래스를 제거한다.", dno);
