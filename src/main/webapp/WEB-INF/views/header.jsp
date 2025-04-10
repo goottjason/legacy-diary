@@ -22,10 +22,10 @@
           <a class="nav-link" href="/member/signup">회원가입</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
+          <a class="nav-link" href="/diary/register">다이어리등록</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
+          <a class="nav-link" href="/diary/list">다이어리목록</a>
         </li>    
       </ul>
     </div>

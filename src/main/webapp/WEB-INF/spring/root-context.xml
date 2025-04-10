@@ -44,6 +44,9 @@
 		<constructor-arg ref="sqlSessionFactory"></constructor-arg>
 	</bean>
 	
+	<!-- 맵퍼 인터페이스 설정 -->
+	<mybatis-spring:scan base-package="com.legacydiary.mapper" />
+	
 	<context:component-scan base-package="com.legacydiary.service" />
 	<context:component-scan base-package="com.legacydiary.persistence" />
 	<context:component-scan base-package="com.legacydiary.util" />

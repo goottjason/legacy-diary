@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 쿼리문 모아놓는 곳 -->
+<mapper namespace="com.legacydiary.mapper.DiaryMapper">
+	<select id="selectNow" resultType="string">
+		select now()
+	</select>	
+	<insert id="insert">
+		insert into diary (title, dueDate, writer) values(#{title}, #{dueDate}, #{writer})
+	</insert>
+	<select id="selectAllList" resultType="com.legacydiary.domain.DiaryVO">
+		select * from diary order by dno desc
+	</select>
+	
+	<update id="updateFinished">
+		update diary set finished = #{finished} where dno = #{dno}
+	</update>
+</mapper>
