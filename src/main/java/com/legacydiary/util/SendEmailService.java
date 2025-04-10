@@ -33,12 +33,12 @@ public class SendEmailService {
 		Properties props = new Properties();
 		
 		// 호스트 주소를 저장해둠
-		props.put("mail.smtp.host", "smtp.naver.com");
+		props.put("mail.smtp.host", "smtp.naver.com"); // smtp.gmail.com
 		props.put("mail.smtp.port", "587");
 		props.put("mail.smtp.starttls.required", "true");
 		props.put("mail.smtp.ssl.protocols", "TLSv1.2");
 		props.put("mail.smtp.auth", "true");
-//		props.put("mail.smtp.ssl.trust", "smtp.naver.com");
+//		props.put("mail.smtp.ssl.trust", "smtp.naver.com"); // 구글 할 때는 지워
 		
 		
 		getAccount();
@@ -60,11 +60,11 @@ public class SendEmailService {
 			mime.addRecipient(RecipientType.TO, new InternetAddress(emailAddr)); // 받는 사람의 메일주소를 세팅
 			
 			mime.setSubject(subject); // 메일의 제목
-			mime.setText(message); // 메일의 본문
-			
+//			mime.setText(message); // 메일의 본문
+			String html = "<h1>회원가입을 환영합니다</h1><h2>인증번호 입력하세요.</h2><h3>" + activationCode + "</h3>";
+			mime.setText(html, "utf-8", "html");
 			Transport.send(mime);
 		}
-		
 	}
 
 	private void getAccount() throws FileNotFoundException, IOException {

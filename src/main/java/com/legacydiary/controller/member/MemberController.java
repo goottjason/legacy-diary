@@ -125,4 +125,13 @@ public class MemberController {
 		}
 		return result;
 	}
+	
+	@PostMapping("/clearAuthCode")
+	public ResponseEntity<String> clearAuthCode(HttpSession session) {
+		// 세션에 저장된 인증코드를 삭제
+		if(session.getAttribute("authCode") != null) {
+			session.removeAttribute("authCode");
+		}
+		return new ResponseEntity<String>("success", HttpStatus.OK);
+	}
 }

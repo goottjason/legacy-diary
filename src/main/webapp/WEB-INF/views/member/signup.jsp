@@ -154,10 +154,13 @@ function callSendEmail() {
 			// 멤버의 이메일주소로 인증메일을 보내는 것까지 성공하게 되면, success!
 			if (data == "success") {
 				// 인증번호 입력받을 수 있는 div요소를 생성
+// 				alert("이메일로 인증번호를 발송했습니다. 인증코드를 입력해주세요.");
 				if ($(".autenticationDiv").length == 0) {		
-					
 					showAuthenticateDiv(); // 인증번호를 입력받을 태그요소를 출력
 				}
+				startTimer(); // 타이머 동작을 호출
+				
+				
 			}
 		},
 		error: function () {},
@@ -165,14 +168,83 @@ function callSendEmail() {
 	});
 }
 
+let timeLeft = 180; // 초단위
+let intervalId = null;
+
+function startTimer() {
+	// 3분(180초)부터 줄어가야 함
+	// setInterval 
+	clearTimer();
+	timeLeft = 180;
+	updateDisplay(timeLeft);
+	intervalId = setInterval(function() {
+		timeLeft--;
+		updateDisplay(timeLeft);
+		if (timeLeft <= 0) {
+			// 타이머 종료
+			clearTimer();
+			expiredTimer();
+		}
+	}, 1000); // 밀리초이므로 1초 = 1000
+	
+}
+
+function expiredTimer() {
+	// 인증버튼 비활성화
+	$("#authBtn").prop("disabled", true);
+	
+	
+	// 타이머 종료시, 백엔드에도 인증시간이 만료되었음을 알려야 한다.
+	if($("#emailValid").val() != "checked") {
+		
+		$.ajax({
+			url: "/member/clearAuthCode", // 데이터가 송수신될 서버의 주소
+			type: "POST", // 통신 방식 (GET, POST, PUT, DELETE)
+			// 보낼 데이터는 필요 없음
+			dataType: "text", // 수신받을 데이터 타입 (MIME TYPE) (text, json, xml)
+			// async: false, // 동기 통신 방식
+			success: function (data) {
+				// 통신이 성공하면 수행할 함수
+				console.log(data); // 데이터가 넘어오면 콘솔에 확인
+				alert("인증시간이 만료되었습니다. 재인증해주세요");
+				$(".autenticationDiv").remove();
+				$("#memberEmail").val("").focus();
+			},
+			error: function () {},
+			complete: function () {},
+		});
+	}
+}
+
+function clearTimer() {
+	if (intervalId != null) {		
+		clearInterval(intervalId); // ID값을 전달하여 setInterval을 클리어할 수 있음
+		intervalId = null; // 다시 초기세팅하듯이 돌려놓음
+	}
+}
+
+function updateDisplay(seconds) {
+	// 시간출력
+	let min = Math.floor(seconds/60);
+	let sec = String(seconds % 60).padStart(2, "0"); // 2자리인데 남은 부분은 왼쪽에 0으로 채워주는 메서드
+	// console.log(min + " : " + sec);
+	let remainTime = min + ":" + sec;
+	$(".timer").html(remainTime);
+}
+
+
 function showAuthenticateDiv() {
 	let authDiv = `
 		<div class="autenticationDiv mt-2">
 			<input type="text" class="form-control" id="memberAuthCode" placeholder="인증번호를 입력하세요." />
-			<button type="button" class="btn btn-info" onclick="checkAuthCode();">인증하기</button> 
+			<div class="d-flex align-items-center">
+				<span class="timer">3:00</span>
+			</div>
+			<button type="button" id="authBtn" class="btn btn-info" onclick="checkAuthCode();">인증하기</button> 
 		</div>
 	`;
 	$(authDiv).insertAfter("#memberEmail");
+	
 }
 
 
@@ -271,6 +343,10 @@ function isValid() {
 	return result; // 폼이 전송되지 않도록 false 반환...
 }
 </script>
+<style>
+	.timer { color: red }
+</style>
+
 </head>
 
 <body>
