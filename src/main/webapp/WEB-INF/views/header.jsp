@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,15 +20,36 @@
     </button>
     <div class="collapse navbar-collapse" id="collapsibleNavbar">
       <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" href="/member/signup">회원가입</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/diary/register">다이어리등록</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/diary/list">다이어리목록</a>
-        </li>    
+      	
+      	<c:choose> 
+      		<c:when test="${loginMember == null}">
+      			<li class="nav-item">
+		          <a class="nav-link" href="/member/signup">회원가입</a>
+		        </li>
+		        <li class="nav-item">
+		          <a class="nav-link" href="/member/login">로그인</a>
+		        </li>
+      		</c:when>
+					<c:otherwise>
+						<li class="nav-item">
+							<a class="nav-link" href="/member/mypage">${loginMember.memberId}님의 mypage</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/member/logout">로그아웃</a>
+						</li>
+						<li class="nav-item">
+		          <a class="nav-link" href="/diary/register">다이어리등록</a>
+		        </li>
+		        <li class="nav-item">
+		          <a class="nav-link" href="/diary/list">다이어리목록</a>
+		        </li>    
+					</c:otherwise>
+     
+      	</c:choose>
+        
+        
+        
+        
       </ul>
     </div>
   </div>

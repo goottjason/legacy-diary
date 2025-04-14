@@ -1,39 +1,36 @@
-package com.legacydiary.mapper;
+package com.legacydiary.util;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 
-import com.legacydiary.controller.SessionFactoryTest;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
 import com.legacydiary.domain.DiaryVO;
+import com.legacydiary.mapper.DiaryMapper;
 import com.legacydiary.persistence.MemberDAO;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations= {"file:src/main/webapp/WEB-INF/spring/**/root-context.xml"})
+@Component
+@RequiredArgsConstructor
 @Slf4j
-public class DiaryMapperTest {
-	@Autowired
-	private DiaryMapper diaryMapper;
-	@Autowired
-	private MemberDAO memberDao;
-	
-//	@Test
-//	public void selectNowTest() {
-//		log.info("###### selectNow: {}", diaryMapper.selectNow());
-//	}
-	
-	@Test
-	public void selectDiaryDueTommorrow() {
-    // 내일 마감인 글 조회
+public class EmailReminderScheduler {
+  private final DiaryMapper diaryMapper;
+  private final MemberDAO memberDAO;
+  private final SendEmailService sendEmailService;
+  
+//  @Scheduled(cron = "0 0/1 * * * * ")
+  public void reminderSchedule() throws AddressException, FileNotFoundException, IOException, MessagingException {
+ // 내일 마감인 글 조회
     List<DiaryVO> list = diaryMapper.selectDiaryDueTommorrow();
     log.info("{}", list);
     
@@ -53,7 +50,7 @@ public class DiaryMapperTest {
       log.info(memberId);
       log.info("$#################### list : {}", entry.getValue());
       
-      String email = memberDao.selectEmailByMemberId(memberId);
+      String email = memberDAO.selectEmailByMemberId(memberId);
       log.info("@@@@@@@@@@@@@@@ email : {}", email);
       
       // 메일 본문
@@ -66,6 +63,8 @@ public class DiaryMapperTest {
       
       log.info("●●●●●●●●● 내용: {}", sb.toString());
       
+      sendEmailService.sendReminder(email, sb.toString());
+      
     }
-	}
+  }
 }

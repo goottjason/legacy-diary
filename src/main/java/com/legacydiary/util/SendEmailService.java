@@ -76,4 +76,42 @@ public class SendEmailService {
 //		System.out.println(this.username);
 //		System.out.println(this.password);
 	}
+	
+	public void sendReminder(String emailAddr, String message) throws FileNotFoundException, IOException, AddressException, MessagingException {
+    String subject = "내일까지 해야할 일이 있습니다.";
+    
+    Properties props = new Properties();
+    
+    // 호스트 주소를 저장해둠
+    props.put("mail.smtp.host", "smtp.naver.com"); // smtp.gmail.com
+    props.put("mail.smtp.port", "587");
+    props.put("mail.smtp.starttls.required", "true");
+    props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+    props.put("mail.smtp.auth", "true");
+//    props.put("mail.smtp.ssl.trust", "smtp.naver.com"); // 구글 할 때는 지워
+    
+    
+    getAccount();
+    
+    
+    // 세션을 생성
+    Session emailSession = Session.getInstance(props, new Authenticator() {
+      @Override
+      protected PasswordAuthentication getPasswordAuthentication() {
+        return new PasswordAuthentication(username, password);
+      }
+    });
+    
+    log.info("emailSession: {}", emailSession.toString());
+    
+    if (emailSession != null) {
+      MimeMessage mime = new MimeMessage(emailSession);
+      mime.setFrom(new InternetAddress("ordinary_things@naver.com")); // 보내는 사람의 메일주소를 세팅
+      mime.addRecipient(RecipientType.TO, new InternetAddress(emailAddr)); // 받는 사람의 메일주소를 세팅
+      
+      mime.setSubject(subject); // 메일의 제목
+      mime.setText(message, "utf-8", "html");
+      Transport.send(mime);
+    }
+  }
 }

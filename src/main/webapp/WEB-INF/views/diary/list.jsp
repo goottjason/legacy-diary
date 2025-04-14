@@ -29,26 +29,92 @@ $(function() {
 			success: function (data) {
 				// 통신이 성공하면 수행할 함수
 				console.log(data); // 데이터가 넘어오면 콘솔에 확인
-				if (checked) {
-					console.log("체크되었으므로 가운데 줄 그을 클래스를 넣는다.", dno);
-					console.log($(this).next());
-// 					$(this).next().next().addClass("checkon");
-				} else {
-					console.log("체크해제됐으므로 가운데 줄 그을 클래스를 제거한다.", dno);
-					$(this).next().next().removeClass("checkon");
+				
+				if (data =='success') {
+					if(checked) {
+						$("#dlist-"+dno).addClass("completed");
+					} else {
+						$("#dlist-"+dno).removeClass("completed");
+					}
+					self.location='/diary/list';
 				}
+// 				if (checked) {
+// 					console.log("체크되었으므로 가운데 줄 그을 클래스를 넣는다.", dno);
+// 					console.log($(this).next());
+// // 					$(this).next().next().addClass("checkon");
+// 				} else {
+// 					console.log("체크해제됐으므로 가운데 줄 그을 클래스를 제거한다.", dno);
+// 					$(this).next().next().removeClass("checkon");
+// 				}
 			},
 			error: function () {},
 			complete: function () {},
 		});
 	});
-	
+	$(".modifyBtn").click(function() {
+		let dno = $(this).data("dno");
+		let title = $(this).data("title");
+		let date = $(this).data("date");
+		console.log(dno, title, date);
+		
+		$("#modifyDno").val(dno);
+		$("#modifyTitle").val(title);
+		$("#modifyDueDate").val(date);
+		
+		
+		$("#modifyModal").show();
+		
+	});
+	$(".closeModal").click(function() {
+		$("#modifyModal").hide();
+	})
 });
+
+// 수정한 부분을 읽어오기
+function modifyDiary() {
+	let dno = $("#modifyDno").val();
+	let title = $("#modifyTitle").val();
+	let dueDateStr = $("#modifyDueDate").val();
+	console.log(dno, title, dueDateStr);
+	// 유효성검사
+	if (title == "" || dueDateStr =="") {
+		alert("제목, 날짜를 입력하세요");
+		return;
+	}
+	
+	// 수정 요청
+	$.ajax({
+		url: "/diary/modify", // 데이터가 송수신될 서버의 주소
+		type: "POST", // 통신 방식 (GET, POST, PUT, DELETE)
+		data: { // 보낼 데이터
+			dno: dno,
+			title: title,
+			dueDateStr: dueDateStr
+		},
+		dataType: "text", // 수신받을 데이터 타입 (MIME TYPE)
+		// async: false, // 동기 통신 방식
+		success: function (data) {
+			// 통신이 성공하면 수행할 함수
+			console.log(data); // 데이터가 넘어오면 콘솔에 확인
+			$("#modifyModal").hide();
+			self.location='/diary/list';
+			
+		},
+		error: function () {},
+		complete: function () {},
+	});	
+	
+}
+	
 	
 </script>
 <style>
 	.checkon {
 		color:red;
+	}
+	li.completed {
+		text-decoration : line-through;
+		color : gray;
 	}
 </style>
 </head>
@@ -63,19 +129,70 @@ $(function() {
 <%-- 			<div>${diaryList }</div> --%>
 			<div>
 				  <ul class="list-group">
-				  	<c:forEach var="diary" items="${diaryList}">
-					    <li class="list-group-item">
+				  	<c:forEach var="diary" items="${diaryList }">
+					    <li class="list-group-item d-flex align-items-center ${diary.finished ? 'completed' : '' }" id = "dlist-${diary.dno}">
 					    	<!-- 체크박스 -->
 					    	<input type = "checkbox" class="form-check-input finishedCheckbox" data-dno="${diary.dno}"
 					    	<c:if test="${diary.finished}">checked</c:if>>
-					    	<label class="form-check-label" for="check1" data-dno="${diary.dno}">${diary.title}</label>
+					    	<div class="">${diary.title}</div>
 							<span>  (${diary.dueDate})</span>
+							<button type="button" class="btn btn-outline-info btn-sm modifyBtn"
+							data-dno="${diary.dno }" data-title="${diary.title}" data-date="${diary.dueDate}">수정</button>
 					    </li>
 				  	</c:forEach>
 				  </ul>
 			</div>
 		</div>
 	</div>
+	
+	
+	
+	
+	
+	
+	<!-- The Modal -->
+<div class="modal" id="modifyModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Modal Heading</h4>
+        <button type="button" class="btn-close closeModal" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <input type="hidden" id="modifyDno" name="dno" />
+        <div class="mb-3 mt-3">
+        <label for="modifyTitle" class="form-label">Title :&nbsp;&nbsp;</label><span></span>
+		<span id="titleError"></span>
+		<input type="text" class="form-control" id="modifyTitle" placeholder="제목" name="title">
+		</div>
+		
+		<div class="mb-3 mt-3">
+					<label for="modifyDueDate" class="form-label">dueDate :&nbsp;&nbsp;</label><span></span>
+					<span id="dueDateError"></span>
+					<input type="date" class="form-control" id="modifyDueDate" name="dueDateStr">
+				</div>
+		
+		
+		
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" onclick="modifyDiary();">저장</button>
+        <button type="button" class="btn btn-danger closeModal" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+	
+	
+	
+	
 	
 	<jsp:include page="../footer.jsp"></jsp:include>
 </body>

@@ -119,9 +119,9 @@ function clearErrors() {
 					<input type="date" class="form-control" id="dueDate" name="dueDateStr">
 				</div>
 				<div class="mb-3 mt-3">
-					<label for="writer" class="form-label">writer :&nbsp;&nbsp;</label><span></span>
-					<span id="writerError"></span>
-					<input type="text" class="form-control" id="writer" placeholder="작성자" name="writer">
+<!-- 					<label for="writer" class="form-label">writer :&nbsp;&nbsp;</label><span></span> -->
+<!-- 					<span id="writerError"></span> -->
+					<input type="hidden" class="form-control" id="writer" placeholder="작성자" name="writer" value="${loginMember.memberId}">
 				</div>
 				<button type="submit" class="btn btn-success" onclick="return isValid();">Submit</button>
 				<button type="reset" class="btn btn-danger" onclick="clearErrors();">취소</button>

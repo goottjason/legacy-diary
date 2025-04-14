@@ -4,6 +4,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.legacydiary.domain.LoginDTO;
 import com.legacydiary.domain.MemberDTO;
 
 // dao단임을 선언, root-context에서 스캔도 해야 함
@@ -29,5 +30,19 @@ public class MemberDAOImpl implements MemberDAO {
 	public int insertMember(MemberDTO registerMember) {
 		return ses.insert(ns + "insertMember", registerMember);
 	}
+
+
+	@Override
+	public MemberDTO login(LoginDTO loginDTO) {
+		// TODO Auto-generated method stub
+		return ses.selectOne(ns + "loginWithLoginDTO", loginDTO);
+	}
+
+
+  @Override
+  public String selectEmailByMemberId(String memberId) {
+    
+    return ses.selectOne(ns + "selectEmailByMemberId", memberId);
+  }
 
 }

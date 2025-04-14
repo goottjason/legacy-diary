@@ -16,4 +16,13 @@
 		insert into member(memberId, memberPwd, memberEmail, memberName) 
 		values(#{memberId}, sha1(md5(#{memberPwd})), #{memberEmail}, #{memberName})
 	</insert>
+	
+	<select id="loginWithLoginDTO" resultType ="MemberDTO">
+		select * from member where memberId = #{memberId} and memberPwd = sha1(md5(#{memberPwd}))
+	</select>
+	
+	<select id="selectEmailByMemberId" resultType = "string">
+	  select memberEmail from member where memberId = #{memberId}
+	</select>
+	
 </mapper>
