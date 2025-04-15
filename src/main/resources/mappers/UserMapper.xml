@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 쿼리문 모아놓는 곳 -->
+<mapper namespace="com.legacydiary.mapper.UserMapper">
+  <select id="searchUser" resultType="com.legacydiary.domain.User">
+    select * from user
+    <where>
+      <choose>
+        <when test="type == 'username'">
+          username like #{keyword}
+        </when>
+        <when test="type == 'email'">
+          email like #{keyword}
+        </when>
+        <otherwise>
+          state = #{keyword}
+        </otherwise>
+      </choose>
+    </where> 
+  </select>
+<insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+    insert into user (username, email, state) values(#{username}, #{email}, #{state})
+  </insert>  
+</mapper>

@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.legacydiary.domain.DiaryVO;
+import com.legacydiary.domain.SearchDTO;
 
 public interface DiaryMapper {
 	String selectNow();
@@ -17,4 +18,7 @@ public interface DiaryMapper {
 	void updateDiary(DiaryVO diaryVO);
 	List<DiaryVO> selectAllListById(String memberId);
 	List<DiaryVO> selectDiaryDueTommorrow();
+	
+	List<DiaryVO> selectSearchList(SearchDTO searchDTO);
+	
 }

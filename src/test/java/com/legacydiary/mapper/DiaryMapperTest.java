@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.legacydiary.controller.SessionFactoryTest;
 import com.legacydiary.domain.DiaryVO;
+import com.legacydiary.domain.SearchDTO;
 import com.legacydiary.persistence.MemberDAO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -67,5 +68,21 @@ public class DiaryMapperTest {
       log.info("●●●●●●●●● 내용: {}", sb.toString());
       
     }
+	}
+	
+	@Test
+	public void testSearch() {
+	  SearchDTO searchDTO = SearchDTO.builder()
+	      .writer("hong1111")
+	      .searchTypes("title")
+	      .searchWord("봄")
+	      .finished("0")
+	      .from("2025-04-15")
+	      .to("2025-04-30")
+	      .build();
+	  List<DiaryVO> result = diaryMapper.selectSearchList(searchDTO);
+	  for (DiaryVO diary : result) {
+	    log.info("▶▶▶▶▶▶▶▶▶▶diary : {}", diary);
+	  }
 	}
 }

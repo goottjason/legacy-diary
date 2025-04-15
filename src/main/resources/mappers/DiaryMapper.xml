@@ -4,30 +4,61 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- 쿼리문 모아놓는 곳 -->
 <mapper namespace="com.legacydiary.mapper.DiaryMapper">
-	<select id="selectNow" resultType="string">
-		select now()
-	</select>	
-	<insert id="insert">
-		insert into diary (title, dueDate, writer) values(#{title}, #{dueDate}, #{writer})
-	</insert>
-	<select id="selectAllList" resultType="com.legacydiary.domain.DiaryVO">
-		select * from diary order by dno desc
-	</select>
-	
-	<update id="updateFinished">
-		update diary set finished = #{finished} where dno = #{dno}
-	</update>
-	
-	<update id="updateDiary">
-		update diary set title = #{title}, dueDate = #{dueDate} where dno = #{dno}
-	</update>
-	
-	<select id="selectAllListById" resultType="DiaryVO">
-		select * from diary where writer = #{memberId} order by dno desc
-	</select>
-	
-	<select id="selectDiaryDueTommorrow" resultType="DiaryVO">
-	 select * from diary where dueDate = date_add(curdate(), interval 1 day)
-	</select>
-	
+  <select id="selectNow" resultType="string">
+    select now()
+  </select>  
+  <insert id="insert">
+    insert into diary (title, dueDate, writer) values(#{title}, #{dueDate}, #{writer})
+  </insert>
+  <select id="selectAllList" resultType="com.legacydiary.domain.DiaryVO">
+    select * from diary order by dno desc
+  </select>
+  
+  <update id="updateFinished">
+    update diary set finished = #{finished} where dno = #{dno}
+  </update>
+  
+  <update id="updateDiary">
+    update diary set title = #{title}, dueDate = #{dueDate} where dno = #{dno}
+  </update>
+  
+  <select id="selectAllListById" resultType="DiaryVO">
+    select * from diary where writer = #{memberId} order by dno desc
+  </select>
+  
+  <select id="selectDiaryDueTommorrow" resultType="DiaryVO">
+   select * from diary where dueDate = date_add(curdate(), interval 1 day)
+  </select>
+  
+  <!-- 검색 -->
+  <sql id="search">
+    <where>
+      <if test="writer != null and writer != ''">
+        writer = #{writer}
+      </if>
+      <if test="searchTypes != null and searchTypes == 'title' and searchWord != null and searchWord != ''">
+        <trim prefix="AND">
+	        title like concat('%', #{searchWord},'%')        
+        </trim>
+      </if>
+      <if test="finished != null and finished != ''">
+        <trim prefix="AND">
+          finished = #{finished}
+        </trim>
+      </if>
+      <if test="from != null and from != '' and to != null and to != ''">
+        <trim prefix="AND">
+          dueDate between #{from} and #{to}
+        </trim>
+      </if>
+    </where>
+  </sql>
+  
+  <select id="selectSearchList" resultType="DiaryVO">
+    select * from diary
+    <include refid="search"></include>
+    order by dno desc
+  </select>
+  
+    
 </mapper>
