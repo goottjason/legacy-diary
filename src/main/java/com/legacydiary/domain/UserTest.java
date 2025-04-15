@@ -2,12 +2,12 @@ package com.legacydiary.domain;
 
 import lombok.Builder;
 
-public class User {
+public class UserTest {
 	private final String id;
 	private final String pwd;
 	private final String name;
 	
-	private User(Builder builder) {
+	private UserTest(Builder builder) {
 		this.id = builder.id;
 		this.pwd = builder.pwd;
 		this.name = builder.name;
@@ -60,8 +60,8 @@ public class User {
 			return this;
 		}
 		
-		public User build() {
-			return new User(this);
+		public UserTest build() {
+			return new UserTest(this);
 		}
 		
 	}

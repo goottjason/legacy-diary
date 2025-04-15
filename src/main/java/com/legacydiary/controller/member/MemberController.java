@@ -19,7 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.legacydiary.domain.LoginDTO;
 import com.legacydiary.domain.MemberDTO;
 import com.legacydiary.domain.MyResponse;
-import com.legacydiary.domain.User;
+import com.legacydiary.domain.UserTest;
 import com.legacydiary.persistence.MemberDAO;
 import com.legacydiary.service.member.MemberService;
 import com.legacydiary.util.SendEmailService;
